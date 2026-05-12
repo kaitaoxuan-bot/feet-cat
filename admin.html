@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>宠托师后台 · 喵伴上门</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;600;700;800&display=swap" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body data-page="admin" class="font-display paw-bg text-stone-800 antialiased min-h-screen">
+    <header class="border-b border-pink-100 bg-white/90 backdrop-blur-md sticky top-0 z-40">
+      <div class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-4 py-3">
+        <div class="flex items-center gap-2">
+          <span class="text-2xl">🐱</span>
+          <div>
+            <h1 class="text-lg font-extrabold text-stone-900">宠托师后台</h1>
+            <p class="text-xs text-stone-500">配置前台展示、订单与简介图</p>
+          </div>
+        </div>
+        <div class="flex flex-wrap items-center gap-2">
+          <button
+            type="button"
+            id="btn-gen-poster"
+            class="rounded-xl bg-gradient-to-r from-pink-500 to-rose-500 px-4 py-2 text-sm font-semibold text-white shadow hover:opacity-95"
+          >
+            生成工作简介图
+          </button>
+          <a href="index.html" target="_blank" class="btn-ghost text-sm">打开前台</a>
+          <button type="button" id="btn-export" class="rounded-xl bg-pink-500 px-4 py-2 text-sm font-semibold text-white shadow hover:bg-pink-600">
+            导出 JSON 备份
+          </button>
+          <button type="button" id="btn-clear-all" class="rounded-xl border border-red-200 bg-white px-4 py-2 text-sm font-semibold text-red-600 hover:bg-red-50">
+            清空所有数据
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main class="mx-auto max-w-6xl px-4 py-8 space-y-10 pb-24">
+      <section class="card-soft rounded-3xl p-5 md:p-8 space-y-6">
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <h2 class="text-lg font-bold text-stone-900">前台品牌与文案</h2>
+          <button type="button" id="btn-save-settings" class="btn-primary text-sm">保存全部配置</button>
+        </div>
+        <p class="text-sm text-stone-600">此处内容会显示在客户看到的 <code class="text-pink-700">index.html</code> 页面；价格与微信也在此维护。</p>
+
+        <div class="grid md:grid-cols-2 gap-4">
+          <label class="block space-y-1 md:col-span-2">
+            <span class="text-xs font-medium text-stone-500">网站 / 品牌名</span>
+            <input id="adm-site-name" class="input-field" type="text" />
+          </label>
+          <label class="block space-y-1">
+            <span class="text-xs font-medium text-stone-500">主标题上行</span>
+            <input id="adm-hero-line1" class="input-field" type="text" />
+          </label>
+          <label class="block space-y-1">
+            <span class="text-xs font-medium text-stone-500">主标题高亮（粉色）</span>
+            <input id="adm-hero-highlight" class="input-field" type="text" />
+          </label>
+          <label class="block space-y-1 md:col-span-2">
+            <span class="text-xs font-medium text-stone-500">副标题描述</span>
+            <input id="adm-hero-desc" class="input-field" type="text" />
+          </label>
+        </div>
+
+        <div class="border-t border-pink-100 pt-6 space-y-3">
+          <h3 class="font-bold text-stone-800 text-sm">服务条目（4 条）</h3>
+          <div class="grid gap-4">
+            <div class="grid sm:grid-cols-12 gap-2 items-end rounded-xl bg-pink-50/50 p-3 border border-pink-100">
+              <label class="sm:col-span-1 space-y-1"><span class="text-[10px] text-stone-500">图标</span><input id="adm-svc-icon-0" class="input-field py-2 text-center" maxlength="4" /></label>
+              <label class="sm:col-span-3 space-y-1"><span class="text-[10px] text-stone-500">标题</span><input id="adm-svc-title-0" class="input-field py-2" /></label>
+              <label class="sm:col-span-8 space-y-1"><span class="text-[10px] text-stone-500">说明</span><input id="adm-svc-desc-0" class="input-field py-2" /></label>
+            </div>
+            <div class="grid sm:grid-cols-12 gap-2 items-end rounded-xl bg-pink-50/50 p-3 border border-pink-100">
+              <label class="sm:col-span-1 space-y-1"><span class="text-[10px] text-stone-500">图标</span><input id="adm-svc-icon-1" class="input-field py-2 text-center" maxlength="4" /></label>
+              <label class="sm:col-span-3 space-y-1"><span class="text-[10px] text-stone-500">标题</span><input id="adm-svc-title-1" class="input-field py-2" /></label>
+              <label class="sm:col-span-8 space-y-1"><span class="text-[10px] text-stone-500">说明</span><input id="adm-svc-desc-1" class="input-field py-2" /></label>
+            </div>
+            <div class="grid sm:grid-cols-12 gap-2 items-end rounded-xl bg-pink-50/50 p-3 border border-pink-100">
+              <label class="sm:col-span-1 space-y-1"><span class="text-[10px] text-stone-500">图标</span><input id="adm-svc-icon-2" class="input-field py-2 text-center" maxlength="4" /></label>
+              <label class="sm:col-span-3 space-y-1"><span class="text-[10px] text-stone-500">标题</span><input id="adm-svc-title-2" class="input-field py-2" /></label>
+              <label class="sm:col-span-8 space-y-1"><span class="text-[10px] text-stone-500">说明</span><input id="adm-svc-desc-2" class="input-field py-2" /></label>
+            </div>
+            <div class="grid sm:grid-cols-12 gap-2 items-end rounded-xl bg-pink-50/50 p-3 border border-pink-100">
+              <label class="sm:col-span-1 space-y-1"><span class="text-[10px] text-stone-500">图标</span><input id="adm-svc-icon-3" class="input-field py-2 text-center" maxlength="4" /></label>
+              <label class="sm:col-span-3 space-y-1"><span class="text-[10px] text-stone-500">标题</span><input id="adm-svc-title-3" class="input-field py-2" /></label>
+              <label class="sm:col-span-8 space-y-1"><span class="text-[10px] text-stone-500">说明</span><input id="adm-svc-desc-3" class="input-field py-2" /></label>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-4 border-t border-pink-100 pt-6">
+          <label class="block space-y-1">
+            <span class="text-xs font-medium text-stone-500">介绍侧栏标题</span>
+            <input id="adm-intro-note-title" class="input-field" type="text" />
+          </label>
+          <div class="hidden md:block"></div>
+          <label class="block space-y-1 md:col-span-2">
+            <span class="text-xs font-medium text-stone-500">介绍侧栏正文</span>
+            <textarea id="adm-intro-note" class="input-field min-h-[80px] resize-y" rows="3"></textarea>
+          </label>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-4 border-t border-pink-100 pt-6">
+          <label class="block space-y-1">
+            <span class="text-xs font-medium text-stone-500">页脚 · 服务范围标题</span>
+            <input id="adm-footer-scope-title" class="input-field" />
+          </label>
+          <label class="block space-y-1 md:col-span-2">
+            <span class="text-xs font-medium text-stone-500">页脚 · 服务范围内容</span>
+            <textarea id="adm-footer-scope" class="input-field min-h-[72px] resize-y" rows="2"></textarea>
+          </label>
+          <label class="block space-y-1">
+            <span class="text-xs font-medium text-stone-500">页脚 · 常见问题标题</span>
+            <input id="adm-footer-faq-title" class="input-field" />
+          </label>
+          <label class="block space-y-1">
+            <span class="text-xs font-medium text-stone-500">页脚 · 服务承诺标题</span>
+            <input id="adm-footer-promise-title" class="input-field" />
+          </label>
+          <label class="block space-y-1">
+            <span class="text-xs font-medium text-stone-500">常见问题（每行一条）</span>
+            <textarea id="adm-footer-faq-lines" class="input-field min-h-[88px] resize-y" rows="4"></textarea>
+          </label>
+          <label class="block space-y-1">
+            <span class="text-xs font-medium text-stone-500">服务承诺（每行一条）</span>
+            <textarea id="adm-footer-promise-lines" class="input-field min-h-[88px] resize-y" rows="4"></textarea>
+          </label>
+        </div>
+
+        <div class="border-t border-pink-100 pt-6 space-y-4">
+          <h3 class="font-bold text-stone-800 text-sm">价格套餐（前台只读展示）</h3>
+          <div class="grid sm:grid-cols-2 gap-4">
+            <label class="block space-y-1">
+              <span class="text-xs font-medium text-stone-500">套餐说明</span>
+              <input id="adm-price-base-label" class="input-field" type="text" />
+            </label>
+            <label class="block space-y-1">
+              <span class="text-xs font-medium text-stone-500">价格（元）</span>
+              <input id="adm-price-base" class="input-field" type="number" min="0" step="1" />
+            </label>
+            <label class="block space-y-1">
+              <span class="text-xs font-medium text-stone-500">加价说明</span>
+              <input id="adm-price-extra-label" class="input-field" type="text" />
+            </label>
+            <label class="block space-y-1">
+              <span class="text-xs font-medium text-stone-500">每只加价（元）</span>
+              <input id="adm-price-extra" class="input-field" type="number" min="0" step="1" />
+            </label>
+          </div>
+          <label class="block space-y-1">
+            <span class="text-xs font-medium text-stone-500">节假日 / 溢价提示</span>
+            <textarea id="adm-price-holiday" class="input-field min-h-[72px] resize-y" rows="2"></textarea>
+          </label>
+        </div>
+
+        <div class="border-t border-pink-100 pt-6 space-y-4">
+          <h3 class="font-bold text-stone-800 text-sm">服务时长档位（前台下拉）</h3>
+          <p class="text-xs text-stone-500">每档「加价」为在基础套餐价之上，<strong>每次上门</strong>额外加收（多日则按天累计）。留空的行不会出现在前台。</p>
+          <div class="grid gap-3">
+            <div class="grid sm:grid-cols-2 gap-2 items-end rounded-xl bg-stone-50 p-3 border border-stone-100">
+              <label class="space-y-1"><span class="text-[10px] text-stone-500">档位 1 名称</span><input id="adm-dur-label-0" class="input-field py-2 text-sm" /></label>
+              <label class="space-y-1"><span class="text-[10px] text-stone-500">加价（元/次）</span><input id="adm-dur-extra-0" class="input-field py-2 text-sm" type="number" min="0" step="1" /></label>
+            </div>
+            <div class="grid sm:grid-cols-2 gap-2 items-end rounded-xl bg-stone-50 p-3 border border-stone-100">
+              <label class="space-y-1"><span class="text-[10px] text-stone-500">档位 2 名称</span><input id="adm-dur-label-1" class="input-field py-2 text-sm" /></label>
+              <label class="space-y-1"><span class="text-[10px] text-stone-500">加价（元/次）</span><input id="adm-dur-extra-1" class="input-field py-2 text-sm" type="number" min="0" step="1" /></label>
+            </div>
+            <div class="grid sm:grid-cols-2 gap-2 items-end rounded-xl bg-stone-50 p-3 border border-stone-100">
+              <label class="space-y-1"><span class="text-[10px] text-stone-500">档位 3 名称</span><input id="adm-dur-label-2" class="input-field py-2 text-sm" /></label>
+              <label class="space-y-1"><span class="text-[10px] text-stone-500">加价（元/次）</span><input id="adm-dur-extra-2" class="input-field py-2 text-sm" type="number" min="0" step="1" /></label>
+            </div>
+            <div class="grid sm:grid-cols-2 gap-2 items-end rounded-xl bg-stone-50 p-3 border border-stone-100">
+              <label class="space-y-1"><span class="text-[10px] text-stone-500">档位 4 名称</span><input id="adm-dur-label-3" class="input-field py-2 text-sm" /></label>
+              <label class="space-y-1"><span class="text-[10px] text-stone-500">加价（元/次）</span><input id="adm-dur-extra-3" class="input-field py-2 text-sm" type="number" min="0" step="1" /></label>
+            </div>
+          </div>
+        </div>
+
+        <div class="border-t border-pink-100 pt-6 space-y-4">
+          <h3 class="font-bold text-stone-800 text-sm">增项收费 &amp; 路程</h3>
+          <p class="text-xs text-stone-500">口服给药按粒、皮下注射按针；刷毛 / 洗耳朵 / 洗浴为单次上门固定价（多日累计）。路程费按公里 × 单价，整单一次性加收。</p>
+          <div class="grid sm:grid-cols-2 gap-3">
+            <label class="space-y-1"><span class="text-xs text-stone-500">口服给药名称</span><input id="adm-addon-pill-label" class="input-field py-2 text-sm" /></label>
+            <label class="space-y-1"><span class="text-xs text-stone-500">单价（元/粒）</span><input id="adm-addon-pill-price" class="input-field py-2 text-sm" type="number" min="0" step="1" /></label>
+            <label class="space-y-1"><span class="text-xs text-stone-500">皮下注射名称</span><input id="adm-addon-inj-label" class="input-field py-2 text-sm" /></label>
+            <label class="space-y-1"><span class="text-xs text-stone-500">单价（元/针）</span><input id="adm-addon-inj-price" class="input-field py-2 text-sm" type="number" min="0" step="1" /></label>
+            <label class="space-y-1"><span class="text-xs text-stone-500">刷毛名称</span><input id="adm-addon-brush-label" class="input-field py-2 text-sm" /></label>
+            <label class="space-y-1"><span class="text-xs text-stone-500">价格（元/次）</span><input id="adm-addon-brush-price" class="input-field py-2 text-sm" type="number" min="0" step="1" /></label>
+            <label class="space-y-1"><span class="text-xs text-stone-500">洗耳朵名称</span><input id="adm-addon-ear-label" class="input-field py-2 text-sm" /></label>
+            <label class="space-y-1"><span class="text-xs text-stone-500">价格（元/次）</span><input id="adm-addon-ear-price" class="input-field py-2 text-sm" type="number" min="0" step="1" /></label>
+            <label class="space-y-1"><span class="text-xs text-stone-500">洗浴名称</span><input id="adm-addon-bath-label" class="input-field py-2 text-sm" /></label>
+            <label class="space-y-1"><span class="text-xs text-stone-500">价格（元/次）</span><input id="adm-addon-bath-price" class="input-field py-2 text-sm" type="number" min="0" step="1" /></label>
+            <label class="space-y-1 sm:col-span-2"><span class="text-xs text-stone-500">路程说明（展示用）</span><input id="adm-km-label" class="input-field py-2 text-sm" /></label>
+            <label class="space-y-1"><span class="text-xs text-stone-500">每公里加价（元）</span><input id="adm-km-price" class="input-field py-2 text-sm" type="number" min="0" step="0.5" /></label>
+          </div>
+        </div>
+
+        <div class="border-t border-pink-100 pt-6 space-y-3">
+          <h3 class="font-bold text-stone-800 text-sm">简介图 · 服务标准 &amp; 自我介绍</h3>
+          <p class="text-xs text-stone-500">会出现在「工作简介图」中，建议写清服务流程、消毒与反馈标准；自我介绍可写资质、经验与服务区域。</p>
+          <label class="block space-y-1">
+            <span class="text-xs font-medium text-stone-500">服务标准（可多行）</span>
+            <textarea id="adm-service-standards" class="input-field min-h-[100px] resize-y" rows="5"></textarea>
+          </label>
+          <label class="block space-y-1">
+            <span class="text-xs font-medium text-stone-500">自我介绍</span>
+            <textarea id="adm-self-intro" class="input-field min-h-[100px] resize-y" rows="5"></textarea>
+          </label>
+        </div>
+
+        <div class="border-t border-pink-100 pt-6 space-y-4">
+          <h3 class="font-bold text-stone-800 text-sm">微信</h3>
+          <label class="block space-y-1 max-w-md">
+            <span class="text-xs font-medium text-stone-500">微信号（前台展示与简介图）</span>
+            <input id="adm-wechat" class="input-field" type="text" autocomplete="off" />
+          </label>
+        </div>
+
+        <div class="border-t border-pink-100 pt-6 space-y-2">
+          <h3 class="font-bold text-stone-800 text-sm">工作简介图底部一行小字</h3>
+          <input id="adm-poster-bottom" class="input-field max-w-2xl" type="text" />
+        </div>
+      </section>
+
+      <section class="card-soft rounded-3xl p-5 md:p-8 space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <h2 class="text-lg font-bold text-stone-900">特色商品 / 套餐</h2>
+          <button type="button" id="btn-featured-add" class="btn-ghost text-sm">＋ 添加一条</button>
+        </div>
+        <p class="text-sm text-stone-600">上传图片与文字，勾选「前台展示」后客户可在「特色推荐」区看到。保存全部配置时一并写入本地。</p>
+        <div id="featured-admin-mount" class="space-y-4"></div>
+      </section>
+
+      <section>
+        <h2 class="text-sm font-bold text-stone-500 uppercase tracking-wide mb-3">统计</h2>
+        <div class="grid grid-cols-2 md:grid-cols-5 gap-3 md:gap-4">
+          <div class="card-soft rounded-2xl p-4 text-center">
+            <p class="text-xs text-stone-500 font-medium">总订单</p>
+            <p id="stat-total" class="text-2xl font-extrabold text-stone-900 mt-1">0</p>
+          </div>
+          <div class="card-soft rounded-2xl p-4 text-center border-pink-100">
+            <p class="text-xs text-pink-600 font-medium">待确认</p>
+            <p id="stat-pending" class="text-2xl font-extrabold text-pink-600 mt-1">0</p>
+          </div>
+          <div class="card-soft rounded-2xl p-4 text-center">
+            <p class="text-xs text-amber-600 font-medium">已接单</p>
+            <p id="stat-accepted" class="text-2xl font-extrabold text-amber-600 mt-1">0</p>
+          </div>
+          <div class="card-soft rounded-2xl p-4 text-center">
+            <p class="text-xs text-emerald-600 font-medium">已完成</p>
+            <p id="stat-completed" class="text-2xl font-extrabold text-emerald-600 mt-1">0</p>
+          </div>
+          <div class="card-soft rounded-2xl p-4 text-center col-span-2 md:col-span-1 bg-gradient-to-br from-pink-50 to-white">
+            <p class="text-xs text-stone-500 font-medium">预估总收入</p>
+            <p id="stat-revenue" class="text-2xl font-extrabold text-pink-600 mt-1">¥0</p>
+            <p class="text-[10px] text-stone-400 mt-1">未取消：日价 × 预约天数</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <h2 class="text-lg font-bold text-stone-900">订单列表</h2>
+        <div class="flex items-center gap-2">
+          <label for="filter-status" class="text-sm text-stone-600 whitespace-nowrap">状态</label>
+          <select id="filter-status" class="input-field max-w-[200px] py-2 text-sm">
+            <option value="all">全部</option>
+            <option value="pending">待确认</option>
+            <option value="accepted">已接单</option>
+            <option value="completed">已完成</option>
+            <option value="cancelled">已取消</option>
+          </select>
+        </div>
+      </section>
+
+      <div id="order-list" class="space-y-4"></div>
+    </main>
+
+    <!-- 工作简介图预览 -->
+    <div
+      id="poster-modal"
+      class="hidden fixed inset-0 z-[200] flex items-center justify-center bg-black/50 p-4"
+      aria-hidden="true"
+      role="dialog"
+      aria-labelledby="poster-modal-title"
+    >
+      <div class="card-soft max-w-lg w-full max-h-[90vh] overflow-y-auto rounded-2xl p-5 shadow-2xl">
+        <div class="flex items-center justify-between gap-2 mb-4">
+          <h2 id="poster-modal-title" class="text-lg font-bold text-stone-900">工作简介图预览</h2>
+          <button type="button" id="btn-poster-close" class="rounded-lg p-2 text-stone-500 hover:bg-pink-50" aria-label="关闭">✕</button>
+        </div>
+        <p class="text-xs text-stone-500 mb-3">已自动保存当前表单。点击下方下载高清 PNG，可用于朋友圈 / 小红书简介。</p>
+        <div class="flex justify-center py-3 bg-pink-50/90 rounded-xl overflow-auto max-h-[55vh]">
+          <div style="width: 315px; height: 420px; overflow: hidden; border-radius: 12px; box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08)">
+            <div id="poster-preview-mount" style="transform: scale(0.35); transform-origin: top left; width: 900px; height: 1200px"></div>
+          </div>
+        </div>
+        <div class="flex flex-wrap gap-2 mt-4">
+          <button type="button" id="btn-poster-download" class="btn-primary flex-1 justify-center min-w-[140px]">下载 PNG</button>
+          <button type="button" id="btn-poster-close-2" class="btn-ghost flex-1 justify-center min-w-[100px]">关闭</button>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="app.js"></script>
+  </body>
+</html>

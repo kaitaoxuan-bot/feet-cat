@@ -1,0 +1,9 @@
+﻿node: v24.15.0
+npm:  11.12.1
+prefix=F:\nodejs\npm-global cache=F:\nodejs\npm-cache profile=F:\nodejs\npm-profile
+
+added 2 packages in 20s
+Already on user Path: F:\nodejs
+Added to user Path: F:\nodejs\npm-global
+claude: 2.1.138 (Claude Code)
+Done. Open a new terminal and run: claude --version

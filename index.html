@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>上门喂猫预约</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;600;700;800&display=swap" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              kitty: { 50: "#fff5f7", 100: "#ffe4ec", 200: "#fbcfe8", 500: "#ec4899", 600: "#db2777" },
+            },
+          },
+        },
+      };
+    </script>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body data-page="index" class="font-display paw-bg text-stone-800 antialiased">
+    <header class="sticky top-0 z-50 border-b border-pink-100/80 bg-white/90 backdrop-blur-md">
+      <div class="mx-auto flex max-w-5xl items-center justify-between gap-3 px-4 py-3">
+        <a href="#" class="flex items-center gap-2 text-pink-600">
+          <span class="text-2xl" aria-hidden="true">🐱</span>
+          <span data-slot-brand class="text-lg font-extrabold tracking-tight text-stone-800">喵伴上门</span>
+        </a>
+        <button
+          type="button"
+          id="nav-toggle"
+          class="rounded-xl border border-pink-200 bg-white p-2 text-pink-600 md:hidden"
+          aria-label="打开菜单"
+        >
+          <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+        <nav class="hidden md:flex items-center gap-1 text-sm font-semibold text-stone-600">
+          <a href="#intro" class="rounded-lg px-3 py-2 hover:bg-pink-50 hover:text-pink-700">服务介绍</a>
+          <a href="#pricing" class="rounded-lg px-3 py-2 hover:bg-pink-50 hover:text-pink-700">价格套餐</a>
+          <a href="#featured" class="rounded-lg px-3 py-2 hover:bg-pink-50 hover:text-pink-700">特色推荐</a>
+          <a href="#book" class="rounded-lg px-3 py-2 hover:bg-pink-50 hover:text-pink-700">在线预约</a>
+          <a href="#contact" class="rounded-lg px-3 py-2 hover:bg-pink-50 hover:text-pink-700">联系微信</a>
+          <a href="admin.html" class="ml-1 rounded-xl bg-pink-500 px-4 py-2 text-white shadow-md hover:bg-pink-600">宠托师后台</a>
+        </nav>
+      </div>
+      <div id="nav-panel" class="hidden border-t border-pink-50 bg-white/95 px-4 py-3 md:hidden">
+        <div class="flex flex-col gap-1 text-sm font-semibold">
+          <a href="#intro" class="rounded-lg px-3 py-2 hover:bg-pink-50">服务介绍</a>
+          <a href="#pricing" class="rounded-lg px-3 py-2 hover:bg-pink-50">价格套餐</a>
+          <a href="#featured" class="rounded-lg px-3 py-2 hover:bg-pink-50">特色推荐</a>
+          <a href="#book" class="rounded-lg px-3 py-2 hover:bg-pink-50">在线预约</a>
+          <a href="#contact" class="rounded-lg px-3 py-2 hover:bg-pink-50">联系微信</a>
+          <a href="admin.html" class="rounded-xl bg-pink-500 px-3 py-2 text-center text-white">宠托师后台</a>
+        </div>
+      </div>
+    </header>
+
+    <main class="mx-auto max-w-5xl px-4 py-10 md:py-14 space-y-16 md:space-y-20">
+      <section id="slot-hero" class="text-center space-y-4"></section>
+
+      <section id="intro" class="scroll-mt-24">
+        <div class="flex items-end gap-3 mb-6">
+          <span class="text-3xl">🐾</span>
+          <h2 class="text-2xl font-bold text-stone-900">服务介绍</h2>
+        </div>
+        <div class="card-soft rounded-3xl p-6 md:p-8 grid md:grid-cols-2 gap-6">
+          <div id="slot-services"></div>
+          <div id="slot-intro-note" class="rounded-2xl bg-gradient-to-br from-pink-100 to-white p-6 border border-pink-100"></div>
+        </div>
+      </section>
+
+      <section id="pricing" class="scroll-mt-24">
+        <div class="flex items-end gap-3 mb-6">
+          <span class="text-3xl">💰</span>
+          <h2 class="text-2xl font-bold text-stone-900">价格套餐</h2>
+        </div>
+        <div class="card-soft rounded-3xl p-6 md:p-8 space-y-4">
+          <div id="slot-pricing"></div>
+        </div>
+      </section>
+
+      <section id="featured" class="scroll-mt-24">
+        <div class="flex items-end gap-3 mb-6">
+          <span class="text-3xl">🎁</span>
+          <h2 class="text-2xl font-bold text-stone-900">特色推荐</h2>
+        </div>
+        <div id="slot-featured" class="card-soft rounded-3xl p-6 md:p-8"></div>
+      </section>
+
+      <section id="book" class="scroll-mt-24">
+        <div class="flex items-end gap-3 mb-6">
+          <span class="text-3xl">📅</span>
+          <h2 class="text-2xl font-bold text-stone-900">在线预约</h2>
+        </div>
+        <form id="order-form" class="card-soft rounded-3xl p-6 md:p-8 space-y-4 max-w-2xl mx-auto">
+          <label class="block space-y-1">
+            <span class="text-sm font-medium text-stone-700">姓名</span>
+            <input id="f-name" name="name" class="input-field" type="text" required autocomplete="name" placeholder="怎么称呼您" />
+          </label>
+          <label class="block space-y-1">
+            <span class="text-sm font-medium text-stone-700">电话</span>
+            <input id="f-phone" name="phone" class="input-field" type="tel" required inputmode="numeric" maxlength="11" placeholder="11 位手机号" />
+          </label>
+          <label class="block space-y-1">
+            <span class="text-sm font-medium text-stone-700">详细地址</span>
+            <input id="f-address" name="address" class="input-field" type="text" required placeholder="小区/门牌/门禁说明" />
+          </label>
+          <label class="block space-y-1">
+            <span class="text-sm font-medium text-stone-700">猫咪数量</span>
+            <input id="f-cats" name="catCount" class="input-field" type="number" min="1" step="1" value="1" required />
+          </label>
+
+          <div class="rounded-2xl border border-pink-100 bg-white/80 p-4 space-y-3">
+            <p class="text-sm font-bold text-stone-900">服务时长</p>
+            <select id="f-duration" class="input-field py-2 text-sm" required></select>
+          </div>
+
+          <div class="rounded-2xl border border-pink-100 bg-white/80 p-4 space-y-3">
+            <p class="text-sm font-bold text-stone-900">服务增项（可选）</p>
+            <p class="text-xs text-stone-500">按单次上门计费；多日预约时，下列按「粒 / 针 / 项」会按预约天数累计（路程费按整单一次性计算）。</p>
+            <div class="grid sm:grid-cols-2 gap-3">
+              <label class="block space-y-1">
+                <span class="text-xs text-stone-600" id="lbl-pill">口服给药（粒数）</span>
+                <input id="f-pills" class="input-field py-2 text-sm" type="number" min="0" step="1" value="0" />
+              </label>
+              <label class="block space-y-1">
+                <span class="text-xs text-stone-600" id="lbl-injection">皮下注射（针数）</span>
+                <input id="f-injections" class="input-field py-2 text-sm" type="number" min="0" step="1" value="0" />
+              </label>
+            </div>
+            <div class="flex flex-wrap gap-x-4 gap-y-2 text-sm">
+              <label class="inline-flex items-center gap-2 cursor-pointer"><input type="checkbox" id="f-brush" class="rounded border-pink-300 text-pink-600" /><span id="lbl-brush">刷毛</span></label>
+              <label class="inline-flex items-center gap-2 cursor-pointer"><input type="checkbox" id="f-ear" class="rounded border-pink-300 text-pink-600" /><span id="lbl-ear">洗耳朵</span></label>
+              <label class="inline-flex items-center gap-2 cursor-pointer"><input type="checkbox" id="f-bath" class="rounded border-pink-300 text-pink-600" /><span id="lbl-bath">洗浴</span></label>
+            </div>
+            <label class="block space-y-1">
+              <span class="text-xs text-stone-600" id="lbl-km">路程（公里，单程参考）</span>
+              <input id="f-km" class="input-field py-2 text-sm" type="number" min="0" step="0.1" value="0" />
+            </label>
+          </div>
+
+          <div class="space-y-2">
+            <span class="text-sm font-medium text-stone-700">预约日期（可添加多天）</span>
+            <div class="flex flex-wrap gap-2 items-stretch sm:items-end">
+              <input id="f-date-add" class="input-field flex-1 min-w-[160px]" type="date" />
+              <button type="button" id="btn-add-date" class="btn-ghost shrink-0">添加该日</button>
+            </div>
+            <div id="date-chips" class="flex flex-wrap gap-2 min-h-[36px]"></div>
+            <p class="text-xs text-stone-500">可多次选择日期加入列表，提交为同一订单。</p>
+          </div>
+          <div id="quote-box" class="rounded-2xl border-2 border-pink-200 bg-gradient-to-br from-pink-50 to-white p-4 space-y-2">
+            <p class="text-sm font-bold text-pink-800">预估费用合计（仅供参考）</p>
+            <ul id="quote-lines" class="text-xs text-stone-600 space-y-1 list-disc list-inside"></ul>
+            <p id="quote-total" class="text-2xl font-extrabold text-pink-600 pt-1">¥0</p>
+            <p class="text-[11px] text-stone-400">实际金额以宠托师微信确认为准。</p>
+          </div>
+
+          <div class="space-y-2">
+            <span class="text-sm font-medium text-stone-700">备注</span>
+            <p class="text-xs text-stone-500 leading-relaxed rounded-xl bg-pink-50/80 border border-pink-100 px-3 py-2">
+              建议补充：<strong>猫咪性格</strong>（怕生/亲人/易应激等）、<strong>疫苗与驱虫情况</strong>、<strong>是否有疾病史或正在用药</strong>；如有喂药、钥匙位置、门禁与上门时段偏好也请一并写明。
+            </p>
+            <textarea id="f-note" name="note" class="input-field min-h-[120px] resize-y" rows="5" placeholder="例如：性格较胆小；疫苗齐全；曾有泌尿系统病史，目前稳定；钥匙在消防栓旁密码盒…"></textarea>
+          </div>
+          <button type="submit" class="btn-primary w-full justify-center py-3 text-base">提交预约</button>
+          <p class="text-xs text-center text-stone-500">提交后数据保存在本机浏览器，请加微信确认最终订单。</p>
+        </form>
+      </section>
+
+      <section id="contact" class="scroll-mt-24">
+        <div class="flex items-end gap-3 mb-6">
+          <span class="text-3xl">💬</span>
+          <h2 class="text-2xl font-bold text-stone-900">联系微信</h2>
+        </div>
+        <div class="card-soft rounded-3xl p-6 md:p-8 max-w-xl mx-auto space-y-4 text-center">
+          <p class="text-stone-600 text-sm">预约后请添加微信核对时间与细节</p>
+          <div class="rounded-2xl bg-pink-50 border border-pink-100 py-4 px-4">
+            <p class="text-xs text-stone-500 mb-1">微信号</p>
+            <p id="wechat-id" class="text-xl font-bold text-pink-700 break-all">YourWeChatID</p>
+          </div>
+          <button type="button" id="btn-copy-wechat" class="btn-primary w-full justify-center">一键复制微信号</button>
+          <p class="text-xs text-stone-500">微信号由宠托师在后台设置。</p>
+        </div>
+      </section>
+    </main>
+
+    <footer class="border-t border-pink-100 bg-white/80 mt-8">
+      <div class="mx-auto max-w-5xl px-4 py-12 space-y-10">
+        <div id="slot-footer" class="grid md:grid-cols-3 gap-8 text-sm"></div>
+        <p class="text-center text-xs text-stone-400">© <span data-slot-brand>喵伴上门</span> · 宠托师自用预约页</p>
+      </div>
+    </footer>
+
+    <script src="app.js"></script>
+  </body>
+</html>
