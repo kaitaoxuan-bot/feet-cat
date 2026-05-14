@@ -7,6 +7,7 @@
   const STORAGE_WECHAT = "cat_sitter_wechat_v1";
   const STORAGE_PUBLIC = "cat_sitter_public_v1";
   const STORAGE_FEATURED = "cat_sitter_featured_v1";
+  const STORAGE_ADMIN_PASSWORD = "cat_sitter_admin_password_v1";
 
   const defaultPricing = () => ({
     baseLabel: "单次上门（1 只猫）",
@@ -543,6 +544,7 @@
         const phone = document.getElementById("f-phone")?.value?.trim();
         const address = document.getElementById("f-address")?.value?.trim();
         const catCount = document.getElementById("f-cats")?.value;
+        const catNames = document.getElementById("f-cat-names")?.value?.trim() || "";
         const note = document.getElementById("f-note")?.value?.trim() || "";
         const durationId = document.getElementById("f-duration")?.value;
 
@@ -593,6 +595,7 @@
           phone,
           address,
           catCount: cats,
+          catNames,
           dates,
           durationId,
           extras,
@@ -988,6 +991,58 @@
   }
 
   function initAdmin() {
+    const lockEl = document.getElementById("admin-lock");
+    const pwdInput = document.getElementById("lock-password");
+    const submitBtn = document.getElementById("lock-submit");
+    const errorMsg = document.getElementById("lock-error");
+
+    function checkPassword() {
+      const savedPwd = localStorage.getItem(STORAGE_ADMIN_PASSWORD);
+      const inputPwd = pwdInput?.value?.trim() || "";
+      if (!savedPwd) {
+        if (inputPwd.length < 4) {
+          if (errorMsg) errorMsg.textContent = "密码至少4位";
+          if (errorMsg) errorMsg.classList.remove("hidden");
+          return false;
+        }
+        localStorage.setItem(STORAGE_ADMIN_PASSWORD, inputPwd);
+        if (lockEl) lockEl.style.display = "none";
+        return true;
+      }
+      if (inputPwd === savedPwd) {
+        if (lockEl) lockEl.style.display = "none";
+        return true;
+      }
+      if (errorMsg) errorMsg.textContent = "密码错误，请重试";
+      if (errorMsg) errorMsg.classList.remove("hidden");
+      return false;
+    }
+
+    if (localStorage.getItem(STORAGE_ADMIN_PASSWORD)) {
+      if (errorMsg) errorMsg.classList.add("hidden");
+    } else {
+      if (errorMsg) errorMsg.textContent = "首次访问请设置密码";
+      if (errorMsg) errorMsg.classList.remove("hidden");
+    }
+
+    if (submitBtn) submitBtn.addEventListener("click", checkPassword);
+    if (pwdInput) {
+      pwdInput.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") checkPassword();
+      });
+    }
+
+    const savedPwd = localStorage.getItem(STORAGE_ADMIN_PASSWORD);
+    if (savedPwd) {
+      if (lockEl) lockEl.style.display = "flex";
+      if (pwdInput) pwdInput.value = "";
+    } else {
+      if (lockEl) lockEl.style.display = "flex";
+      if (pwdInput) pwdInput.value = "";
+      if (errorMsg) errorMsg.textContent = "首次访问请设置密码";
+      if (errorMsg) errorMsg.classList.remove("hidden");
+    }
+
     fillAdminForm();
 
     document.getElementById("btn-featured-add")?.addEventListener("click", () => {
@@ -1131,7 +1186,7 @@
             <p class="text-sm text-stone-700"><span class="text-stone-500">时长：</span>${durLine}</p>
             <p class="text-sm text-stone-700"><span class="text-stone-500">增项：</span>${exLine}</p>
             <p class="text-sm text-stone-700"><span class="text-stone-500">地址：</span>${escapeHtml(o.address)}</p>
-            <p class="text-sm text-stone-700"><span class="text-stone-500">猫咪：</span>${o.catCount} 只</p>
+            <p class="text-sm text-stone-700"><span class="text-stone-500">猫咪：</span>${o.catCount} 只${o.catNames ? '（' + escapeHtml(o.catNames) + '）' : ''}</p>
             ${o.note ? `<p class="text-sm text-stone-600 bg-pink-50/80 rounded-xl px-3 py-2"><span class="text-stone-500">备注：</span>${escapeHtml(o.note)}</p>` : ""}
             <div class="flex flex-wrap gap-2 items-center">
               ${actions}

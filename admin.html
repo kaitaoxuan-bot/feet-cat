@@ -307,5 +307,26 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="app.js"></script>
-  </body>
+  <!-- 后台登录保护遮罩 -->
+  <div id="admin-lock" class="fixed inset-0 z-[300] flex items-center justify-center bg-gradient-to-br from-pink-100 to-white">
+    <div class="card-soft rounded-3xl p-8 max-w-sm w-full mx-4 text-center space-y-6 shadow-xl">
+      <div class="text-5xl">🔐</div>
+      <div>
+        <h2 class="text-xl font-bold text-stone-800">宠托师后台</h2>
+        <p class="text-sm text-stone-500 mt-1">请输入访问密码</p>
+      </div>
+      <div class="space-y-3">
+        <input type="password" id="lock-password" class="input-field text-center text-lg tracking-widest" placeholder="请输入密码" autocomplete="off" />
+        <button type="button" id="lock-submit" class="btn-primary w-full py-3 text-base">进入后台</button>
+        <p id="lock-error" class="text-red-500 text-sm hidden">密码错误，请重试</p>
+      </div>
+      <div class="text-xs text-stone-400">
+        <p>首次访问请设置密码</p>
+        <p>密码仅保存在本机浏览器</p>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
 </html>

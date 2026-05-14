@@ -22,6 +22,21 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body data-page="index" class="font-display paw-bg text-stone-800 antialiased">
+    <!-- 可爱猫咪动画背景 -->
+    <div class="cat-bg">
+      <div class="cat-element cat-1">🐱</div>
+      <div class="cat-element cat-2">😺</div>
+      <div class="cat-element cat-3">😻</div>
+      <div class="cat-element cat-4">🐈</div>
+      <div class="cat-element cat-5">😸</div>
+      <div class="cat-element cat-6">😽</div>
+      <div class="paw-print paw-1">🐾</div>
+      <div class="paw-print paw-2">🐾</div>
+      <div class="paw-print paw-3">🐾</div>
+      <div class="paw-print paw-4">🐾</div>
+      <div class="yarn-ball yarn-1">🧶</div>
+      <div class="yarn-ball yarn-2">🧶</div>
+    </div>
     <header class="sticky top-0 z-50 border-b border-pink-100/80 bg-white/90 backdrop-blur-md">
       <div class="mx-auto flex max-w-5xl items-center justify-between gap-3 px-4 py-3">
         <a href="#" class="flex items-center gap-2 text-pink-600">
@@ -112,6 +127,10 @@
           <label class="block space-y-1">
             <span class="text-sm font-medium text-stone-700">猫咪数量</span>
             <input id="f-cats" name="catCount" class="input-field" type="number" min="1" step="1" value="1" required />
+          </label>
+          <label class="block space-y-1">
+            <span class="text-sm font-medium text-stone-700">宠物名称 <span class="text-xs text-stone-400">(多只请用逗号分隔)</span></span>
+            <input id="f-cat-names" name="catNames" class="input-field" type="text" placeholder="例如：咪咪, 小黑, 橘子" />
           </label>
 
           <div class="rounded-2xl border border-pink-100 bg-white/80 p-4 space-y-3">

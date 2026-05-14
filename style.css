@@ -18,10 +18,178 @@ body {
   color: var(--text-main);
   background: linear-gradient(165deg, var(--pink-50) 0%, #fff 45%, var(--pink-100) 100%);
   min-height: 100vh;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* 可爱猫咪动画背景 */
+.cat-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.cat-element {
+  position: absolute;
+  opacity: 0.6;
+  animation: float 8s ease-in-out infinite;
+}
+
+.cat-element.cat-1 {
+  font-size: 48px;
+  top: 10%;
+  left: 5%;
+  animation-delay: 0s;
+  animation-duration: 10s;
+}
+
+.cat-element.cat-2 {
+  font-size: 36px;
+  top: 25%;
+  right: 8%;
+  animation-delay: 2s;
+  animation-duration: 12s;
+}
+
+.cat-element.cat-3 {
+  font-size: 42px;
+  top: 60%;
+  left: 12%;
+  animation-delay: 4s;
+  animation-duration: 9s;
+}
+
+.cat-element.cat-4 {
+  font-size: 32px;
+  top: 75%;
+  right: 15%;
+  animation-delay: 1s;
+  animation-duration: 11s;
+}
+
+.cat-element.cat-5 {
+  font-size: 40px;
+  top: 40%;
+  left: 70%;
+  animation-delay: 3s;
+  animation-duration: 8s;
+}
+
+.cat-element.cat-6 {
+  font-size: 28px;
+  top: 85%;
+  left: 45%;
+  animation-delay: 5s;
+  animation-duration: 13s;
+}
+
+/* 猫爪印装饰 */
+.paw-print {
+  position: absolute;
+  opacity: 0.4;
+  font-size: 24px;
+  animation: bounce 4s ease-in-out infinite;
+}
+
+.paw-print.paw-1 {
+  top: 15%;
+  right: 25%;
+  animation-delay: 0s;
+}
+
+.paw-print.paw-2 {
+  top: 50%;
+  left: 5%;
+  animation-delay: 1s;
+}
+
+.paw-print.paw-3 {
+  top: 80%;
+  right: 35%;
+  animation-delay: 2s;
+}
+
+.paw-print.paw-4 {
+  top: 30%;
+  left: 50%;
+  animation-delay: 0.5s;
+}
+
+/* 毛线球装饰 */
+.yarn-ball {
+  position: absolute;
+  opacity: 0.5;
+  font-size: 32px;
+  animation: spin 6s linear infinite;
+}
+
+.yarn-ball.yarn-1 {
+  top: 20%;
+  left: 85%;
+  animation-delay: 0s;
+}
+
+.yarn-ball.yarn-2 {
+  top: 65%;
+  right: 5%;
+  animation-delay: 2s;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  25% {
+    transform: translateY(-20px) rotate(5deg);
+  }
+  50% {
+    transform: translateY(-10px) rotate(0deg);
+  }
+  75% {
+    transform: translateY(-25px) rotate(-5deg);
+  }
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-10px) scale(1.1);
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* 波浪尾巴动画 */
+@keyframes wave-tail {
+  0%, 100% {
+    transform: rotate(-10deg);
+  }
+  50% {
+    transform: rotate(10deg);
+  }
 }
 
 .font-display {
   font-family: "Nunito", "PingFang SC", "Microsoft YaHei", sans-serif;
+}
+
+main, footer {
+  position: relative;
+  z-index: 1;
 }
 
 .card-soft {
