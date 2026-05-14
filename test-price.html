@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>费用计算测试</title>
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; background: #fef2f2; }
+    .test-box { background: white; border-radius: 16px; padding: 24px; margin-bottom: 20px; box-shadow: 0 2px 12px rgba(219, 39, 119, 0.1); }
+    h2 { color: #db2777; margin-top: 0; }
+    .price-table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+    .price-table th, .price-table td { padding: 10px; text-align: left; border-bottom: 1px solid #fce7f3; }
+    .price-table th { background: #fdf2f8; color: #be185d; }
+    .result { font-size: 24px; font-weight: bold; color: #db2777; margin-top: 16px; padding: 16px; background: #fdf2f8; border-radius: 12px; }
+    .correct { color: #16a34a; }
+    .wrong { color: #dc2626; }
+    input { padding: 8px 12px; border: 2px solid #fecaca; border-radius: 8px; width: 80px; text-align: center; font-size: 16px; }
+    button { background: #db2777; color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-size: 16px; }
+    button:hover { background: #be185d; }
+    .calc-step { margin: 8px 0; padding: 8px 12px; background: #fef7ff; border-radius: 8px; }
+  </style>
+</head>
+<body>
+  <h1>💰 费用计算测试工具</h1>
+  
+  <div class="test-box">
+    <h2>📝 测试参数设置</h2>
+    <table class="price-table">
+      <tr><th>参数</th><th>值</th><th>说明</th></tr>
+      <tr><td>猫咪数量</td><td><input type="number" id="catCount" value="2" min="1"></td><td>只</td></tr>
+      <tr><td>服务天数</td><td><input type="number" id="days" value="3" min="1"></td><td>天</td></tr>
+      <tr><td>距离</td><td><input type="number" id="km" value="5" min="0" step="0.1"></td><td>km</td></tr>
+      <tr><td>口服给药</td><td><input type="number" id="pills" value="3" min="0"></td><td>粒</td></tr>
+      <tr><td>皮下注射</td><td><input type="number" id="injections" value="1" min="0"></td><td>针</td></tr>
+      <tr><td>刷毛</td><td><input type="number" id="brush" value="2" min="0"></td><td>次</td></tr>
+      <tr><td>洗耳朵</td><td><input type="number" id="ear" value="1" min="0"></td><td>次</td></tr>
+      <tr><td>洗浴</td><td><input type="number" id="bath" value="0" min="0"></td><td>次</td></tr>
+    </table>
+    <button onclick="runTest()">重新计算</button>
+  </div>
+  
+  <div class="test-box">
+    <h2>📊 定价标准</h2>
+    <table class="price-table">
+      <tr><td>基础套餐（含第1只猫）</td><td align="right">¥35</td></tr>
+      <tr><td>每增加1只猫</td><td align="right">¥10</td></tr>
+      <tr><td>口服给药</td><td align="right">¥5/粒</td></tr>
+      <tr><td>皮下注射</td><td align="right">¥15/针</td></tr>
+      <tr><td>刷毛</td><td align="right">¥10/次</td></tr>
+      <tr><td>洗耳朵</td><td align="right">¥15/次</td></tr>
+      <tr><td>洗浴</td><td align="right">¥80/次</td></tr>
+      <tr><td>路程费</td><td align="right">¥3/km</td></tr>
+    </table>
+  </div>
+  
+  <div class="test-box">
+    <h2>🧮 计算过程</h2>
+    <div id="calcSteps"></div>
+    <div class="result" id="finalResult"></div>
+  </div>
+
+  <script>
+    const PRICING = {
+      basePrice: 35,
+      extraCatPrice: 10,
+      addonPillPrice: 5,
+      addonInjectionPrice: 15,
+      addonBrushPrice: 10,
+      addonEarPrice: 15,
+      addonBathPrice: 80,
+      kmPrice: 3
+    };
+
+    function singleVisitCatBase(catCount) {
+      const n = Math.max(1, parseInt(catCount, 10) || 1);
+      return PRICING.basePrice + Math.max(0, n - 1) * PRICING.extraCatPrice;
+    }
+
+    function perVisitAddons(pills, injections, brush, ear, bath) {
+      let sum = Math.max(0, parseInt(pills, 10) || 0) * PRICING.addonPillPrice;
+      sum += Math.max(0, parseInt(injections, 10) || 0) * PRICING.addonInjectionPrice;
+      sum += Math.max(0, parseInt(brush, 10) || 0) * PRICING.addonBrushPrice;
+      sum += Math.max(0, parseInt(ear, 10) || 0) * PRICING.addonEarPrice;
+      sum += Math.max(0, parseInt(bath, 10) || 0) * PRICING.addonBathPrice;
+      return sum;
+    }
+
+    function orderDistanceAmount(km) {
+      return Math.max(0, parseFloat(km) || 0) * PRICING.kmPrice;
+    }
+
+    function orderAmount(catCount, days, km, pills, injections, brush, ear, bath) {
+      const basePerVisit = singleVisitCatBase(catCount);
+      const addons = perVisitAddons(pills, injections, brush, ear, bath);
+      const dist = orderDistanceAmount(km);
+      return basePerVisit * days + addons + dist;
+    }
+
+    function runTest() {
+      const catCount = document.getElementById('catCount').value;
+      const days = document.getElementById('days').value;
+      const km = document.getElementById('km').value;
+      const pills = document.getElementById('pills').value;
+      const injections = document.getElementById('injections').value;
+      const brush = document.getElementById('brush').value;
+      const ear = document.getElementById('ear').value;
+      const bath = document.getElementById('bath').value;
+
+      const base = singleVisitCatBase(catCount);
+      const addons = perVisitAddons(pills, injections, brush, ear, bath);
+      const dist = orderDistanceAmount(km);
+      const total = orderAmount(catCount, days, km, pills, injections, brush, ear, bath);
+
+      let html = '';
+      html += `<div class="calc-step">💰 基础套餐：¥${PRICING.basePrice}（第1只猫）`;
+      if (catCount > 1) {
+        html += ` + ¥${PRICING.extraCatPrice} × ${catCount - 1}只 = ¥${base}`;
+      }
+      html += `</div>`;
+      
+      html += `<div class="calc-step">📅 基础套餐总价：¥${base} × ${days}天 = ¥${base * days}</div>`;
+      
+      html += `<div class="calc-step">🎁 增项费用：`;
+      const addonItems = [];
+      if (pills > 0) addonItems.push(`口服给药 ${pills}粒 × ¥${PRICING.addonPillPrice} = ¥${pills * PRICING.addonPillPrice}`);
+      if (injections > 0) addonItems.push(`皮下注射 ${injections}针 × ¥${PRICING.addonInjectionPrice} = ¥${injections * PRICING.addonInjectionPrice}`);
+      if (brush > 0) addonItems.push(`刷毛 ${brush}次 × ¥${PRICING.addonBrushPrice} = ¥${brush * PRICING.addonBrushPrice}`);
+      if (ear > 0) addonItems.push(`洗耳朵 ${ear}次 × ¥${PRICING.addonEarPrice} = ¥${ear * PRICING.addonEarPrice}`);
+      if (bath > 0) addonItems.push(`洗浴 ${bath}次 × ¥${PRICING.addonBathPrice} = ¥${bath * PRICING.addonBathPrice}`);
+      html += addonItems.join(' + ') + ` = ¥${addons}</div>`;
+      
+      html += `<div class="calc-step">🚗 路程费：${km}km × ¥${PRICING.kmPrice}/km = ¥${dist}</div>`;
+
+      document.getElementById('calcSteps').innerHTML = html;
+      
+      const expected = 215;
+      const isCorrect = total === expected;
+      document.getElementById('finalResult').innerHTML = 
+        `✨ 预估合计：¥${total} <br/>` +
+        `预期结果：¥${expected} <br/>` +
+        `<span class="${isCorrect ? 'correct' : 'wrong'}">${isCorrect ? '✅ 计算正确！' : '❌ 计算错误！'}</span>`;
+    }
+
+    runTest();
+  </script>
+</body>
+</html>

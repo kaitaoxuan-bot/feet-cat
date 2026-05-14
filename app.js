@@ -175,10 +175,13 @@
     const ex = order.extras || {};
     const pills = Math.max(0, parseInt(ex.pills, 10) || 0);
     const inj = Math.max(0, parseInt(ex.injections, 10) || 0);
+    const brush = Math.max(0, parseInt(ex.brush, 10) || 0);
+    const ear = Math.max(0, parseInt(ex.ear, 10) || 0);
+    const bath = Math.max(0, parseInt(ex.bath, 10) || 0);
     let sum = pills * (parseFloat(p.addonPillPrice) || 0) + inj * (parseFloat(p.addonInjectionPrice) || 0);
-    if (ex.brush) sum += parseFloat(p.addonBrushPrice) || 0;
-    if (ex.ear) sum += parseFloat(p.addonEarPrice) || 0;
-    if (ex.bath) sum += parseFloat(p.addonBathPrice) || 0;
+    sum += brush * (parseFloat(p.addonBrushPrice) || 0);
+    sum += ear * (parseFloat(p.addonEarPrice) || 0);
+    sum += bath * (parseFloat(p.addonBathPrice) || 0);
     return sum;
   }
 
@@ -201,7 +204,8 @@
   /** 订单预估总额 */
   function orderAmount(order, pricing) {
     const days = Math.max(1, orderDates(order).length);
-    return singleVisitAmount(order, pricing) * days + orderDistanceAmount(order, pricing);
+    const basePerVisit = singleVisitCatBase(order, pricing) + durationExtra(order, pricing);
+    return basePerVisit * days + perVisitAddons(order, pricing) + orderDistanceAmount(order, pricing);
   }
 
   function explainOrderAmount(order, pricing) {
@@ -210,15 +214,72 @@
     const catBase = singleVisitCatBase(order, pr);
     const dur = durationExtra(order, pr);
     const addons = perVisitAddons(order, pr);
-    const perVisit = catBase + dur + addons;
+    const basePerVisit = catBase + dur;
+    const perVisit = basePerVisit + addons;
     const dist = orderDistanceAmount(order, pr);
-    const total = perVisit * days + dist;
+    const total = basePerVisit * days + addons + dist;
 
     const lines = [];
-    lines.push(`基础套餐（${days} 天 × 含猫只计价）：${days} × ¥${catBase.toFixed(0)} = ¥${(catBase * days).toFixed(0)}`);
-    if (dur > 0) lines.push(`服务时长加价：${days} × ¥${dur.toFixed(0)} = ¥${(dur * days).toFixed(0)}`);
-    if (addons > 0) lines.push(`服务增项：${days} × ¥${addons.toFixed(0)} = ¥${(addons * days).toFixed(0)}`);
-    if (dist > 0) lines.push(`路程（¥${pr.kmPrice}/km × ${(parseFloat(order.km) || 0).toFixed(1)} km）：¥${dist.toFixed(0)}`);
+    
+    const catCount = Math.max(1, parseInt(order.catCount, 10) || 1);
+    lines.push(`📅 服务天数：${days} 天`);
+    lines.push(`🐱 猫咪数量：${catCount} 只`);
+    lines.push(``);
+    
+    lines.push(`💰 基础套餐：¥${pr.basePrice}（含第1只猫）`);
+    if (catCount > 1) {
+      const extraCats = catCount - 1;
+      const extraCatPrice = extraCats * (parseFloat(pr.extraCatPrice) || 0);
+      lines.push(`   └─ 额外猫咪：${extraCats} 只 × ¥${pr.extraCatPrice}/只 = ¥${extraCatPrice.toFixed(0)}`);
+    }
+    lines.push(`   └─ 小计：¥${catBase.toFixed(0)}/次 × ${days} 天 = ¥${(catBase * days).toFixed(0)}`);
+    
+    if (dur > 0) {
+      const durLabel = durationLabel(order, pr);
+      lines.push(`⏱️ 服务时长：${durLabel}（加价 ¥${dur.toFixed(0)}/次）`);
+      lines.push(`   └─ 小计：¥${dur.toFixed(0)}/次 × ${days} 天 = ¥${(dur * days).toFixed(0)}`);
+    }
+    
+    const ex = order.extras || {};
+    const pills = Math.max(0, parseInt(ex.pills, 10) || 0);
+    const inj = Math.max(0, parseInt(ex.injections, 10) || 0);
+    const brush = Math.max(0, parseInt(ex.brush, 10) || 0);
+    const ear = Math.max(0, parseInt(ex.ear, 10) || 0);
+    const bath = Math.max(0, parseInt(ex.bath, 10) || 0);
+    
+    if (pills > 0 || inj > 0 || brush > 0 || ear > 0 || bath > 0) {
+      lines.push(`🎁 服务增项（按次数计算，非每次上门）：`);
+      if (pills > 0) {
+        const pillPrice = pills * (parseFloat(pr.addonPillPrice) || 0);
+        lines.push(`   └─ ${pr.addonPillLabel}：${pills} 粒 × ¥${pr.addonPillPrice}/粒 = ¥${pillPrice.toFixed(0)}`);
+      }
+      if (inj > 0) {
+        const injPrice = inj * (parseFloat(pr.addonInjectionPrice) || 0);
+        lines.push(`   └─ ${pr.addonInjectionLabel}：${inj} 针 × ¥${pr.addonInjectionPrice}/针 = ¥${injPrice.toFixed(0)}`);
+      }
+      if (brush > 0) {
+        const brushPrice = brush * (parseFloat(pr.addonBrushPrice) || 0);
+        lines.push(`   └─ ${pr.addonBrushLabel}：${brush} 次 × ¥${pr.addonBrushPrice}/次 = ¥${brushPrice.toFixed(0)}`);
+      }
+      if (ear > 0) {
+        const earPrice = ear * (parseFloat(pr.addonEarPrice) || 0);
+        lines.push(`   └─ ${pr.addonEarLabel}：${ear} 次 × ¥${pr.addonEarPrice}/次 = ¥${earPrice.toFixed(0)}`);
+      }
+      if (bath > 0) {
+        const bathPrice = bath * (parseFloat(pr.addonBathPrice) || 0);
+        lines.push(`   └─ ${pr.addonBathLabel}：${bath} 次 × ¥${pr.addonBathPrice}/次 = ¥${bathPrice.toFixed(0)}`);
+      }
+      lines.push(`   └─ 增项合计：¥${addons.toFixed(0)}`);
+    }
+    
+    if (dist > 0) {
+      const km = parseFloat(order.km) || 0;
+      lines.push(`🚗 路程费：${km.toFixed(1)} km × ¥${pr.kmPrice}/km = ¥${dist.toFixed(0)}`);
+    }
+    
+    lines.push(``);
+    lines.push(`✨ 每次上门费用：¥${perVisit.toFixed(0)}`);
+    lines.push(`✨ 预估合计：¥${total.toFixed(0)}`);
 
     return { lines, total, days, perVisit, catBase, dur, addons, dist, pr };
   }
@@ -267,6 +328,9 @@
         <div class="flex flex-wrap justify-center gap-3 pt-2">
           <a href="#book" class="btn-primary">立即预约</a>
           <a href="#pricing" class="btn-ghost">先看价格</a>
+          <button type="button" id="btn-share" class="rounded-xl border-2 border-pink-200 bg-white/90 px-4 py-2 text-sm font-semibold text-pink-600 shadow-sm hover:bg-pink-50 flex items-center gap-2">
+            <span>📤</span>分享链接
+          </button>
         </div>`;
     }
 
@@ -464,6 +528,35 @@
           document.execCommand("copy");
           document.body.removeChild(ta);
           showToast("已复制微信号");
+        }
+      });
+    }
+
+    const btnShare = document.getElementById("btn-share");
+    if (btnShare) {
+      btnShare.addEventListener("click", async () => {
+        const shareUrl = window.location.href;
+        const shareText = `需要上门喂猫服务？点击链接在线预约 → ${shareUrl}`;
+        
+        try {
+          if (navigator.share) {
+            await navigator.share({
+              title: document.title,
+              text: shareText,
+              url: shareUrl
+            });
+          } else {
+            await navigator.clipboard.writeText(shareUrl);
+            showToast("链接已复制，可粘贴到聊天窗口");
+          }
+        } catch (err) {
+          const ta = document.createElement("textarea");
+          ta.value = shareUrl;
+          document.body.appendChild(ta);
+          ta.select();
+          document.execCommand("copy");
+          document.body.removeChild(ta);
+          showToast("链接已复制，可粘贴到聊天窗口");
         }
       });
     }
@@ -1234,6 +1327,7 @@
       saveOrders(orders);
       renderStats();
       renderList();
+      renderCalendar();
       showToast("已更新");
     }
 
@@ -1321,6 +1415,7 @@
         fillAdminForm();
         renderStats();
         renderList();
+        renderCalendar();
         showToast("已清空");
       });
     }
@@ -1401,8 +1496,178 @@
       });
     }
 
+    let currentCalDate = new Date();
+
+    function renderCalendar() {
+      const year = currentCalDate.getFullYear();
+      const month = currentCalDate.getMonth();
+      const today = new Date();
+      const todayStr = today.toISOString().slice(0, 10);
+      
+      const monthNames = ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"];
+      const dayNames = ["日", "一", "二", "三", "四", "五", "六"];
+      
+      const calMonthEl = document.getElementById("cal-month");
+      if (calMonthEl) {
+        calMonthEl.textContent = `${year}年${monthNames[month]}`;
+      }
+      
+      const firstDay = new Date(year, month, 1);
+      const lastDay = new Date(year, month + 1, 0);
+      const startPadding = firstDay.getDay();
+      const totalDays = lastDay.getDate();
+      
+      const orders = loadOrders();
+      const ordersByDate = {};
+      orders.forEach(order => {
+        if (order.status !== "cancelled") {
+          order.dates?.forEach(date => {
+            if (!ordersByDate[date]) ordersByDate[date] = [];
+            ordersByDate[date].push(order);
+          });
+        }
+      });
+      
+      let html = '<div class="grid grid-cols-7 gap-1 mb-2">';
+      dayNames.forEach(d => {
+        html += `<div class="text-center text-xs font-medium text-stone-500 py-2">${d}</div>`;
+      });
+      html += '</div>';
+      
+      html += '<div class="grid grid-cols-7 gap-1">';
+      
+      for (let i = 0; i < startPadding; i++) {
+        html += '<div class="min-h-[60px]"></div>';
+      }
+      
+      for (let day = 1; day <= totalDays; day++) {
+        const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+        const dayOrders = ordersByDate[dateStr] || [];
+        const isToday = dateStr === todayStr;
+        const isPast = dateStr < todayStr;
+        
+        let dayClasses = "min-h-[60px] p-1 rounded-lg border border-transparent hover:border-pink-200 hover:bg-pink-50/50 cursor-pointer transition-all";
+        if (isToday) dayClasses += " bg-pink-100 border-pink-300";
+        if (isPast) dayClasses += " opacity-50";
+        
+        html += `<div class="${dayClasses}" data-date="${dateStr}">`;
+        html += `<div class="text-xs font-medium ${isToday ? 'text-pink-600' : 'text-stone-700'}">${day}</div>`;
+        
+        if (dayOrders.length > 0) {
+          const acceptedCount = dayOrders.filter(o => o.status === "accepted").length;
+          const pendingCount = dayOrders.filter(o => o.status === "pending").length;
+          
+          html += '<div class="mt-1 space-y-1">';
+          dayOrders.slice(0, 3).forEach((order, idx) => {
+            const addr = order.address?.replace(/小区|号楼|单元/g, '').slice(0, 6) || '未知地址';
+            const statusClass = order.status === "accepted" ? "bg-emerald-100 text-emerald-700" : "bg-pink-100 text-pink-700";
+            html += `<div class="text-[10px] px-1.5 py-0.5 rounded ${statusClass} truncate">${addr}</div>`;
+          });
+          if (dayOrders.length > 3) {
+            html += `<div class="text-[10px] text-stone-500 text-center">+${dayOrders.length - 3}</div>`;
+          }
+          html += '</div>';
+        }
+        
+        html += '</div>';
+      }
+      
+      html += '</div>';
+      
+      const calGrid = document.getElementById("calendar-grid");
+      if (calGrid) {
+        calGrid.innerHTML = html;
+        
+        calGrid.querySelectorAll("[data-date]").forEach(cell => {
+          cell.addEventListener("click", () => {
+            const date = cell.getAttribute("data-date");
+            showDayDetail(date);
+          });
+        });
+      }
+    }
+
+    function showDayDetail(date) {
+      const orders = loadOrders();
+      const dayOrders = orders.filter(order => {
+        return order.status !== "cancelled" && order.dates?.includes(date);
+      });
+      
+      const titleEl = document.getElementById("cal-detail-title");
+      const contentEl = document.getElementById("cal-detail-content");
+      const detailEl = document.getElementById("cal-selected-detail");
+      
+      const dateObj = new Date(date);
+      const monthNames = ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"];
+      const dayNames = ["周日", "周一", "周二", "周三", "周四", "周五", "周六"];
+      
+      if (titleEl) {
+        titleEl.textContent = `${dateObj.getFullYear()}年${monthNames[dateObj.getMonth()]}${dateObj.getDate()}日 ${dayNames[dateObj.getDay()]}`;
+      }
+      
+      if (contentEl) {
+        if (dayOrders.length === 0) {
+          contentEl.innerHTML = '<p class="text-sm text-stone-500 text-center py-4">当日暂无行程安排</p>';
+        } else {
+          let html = '';
+          dayOrders.forEach((order, idx) => {
+            const statusText = order.status === "accepted" ? "已接单" : "待确认";
+            const statusClass = order.status === "accepted" ? "bg-emerald-100 text-emerald-700" : "bg-pink-100 text-pink-700";
+            const cats = order.catNames ? order.catNames : `${order.catCount}只猫`;
+            
+            html += `
+              <div class="rounded-xl border border-pink-100 bg-white p-3 space-y-2">
+                <div class="flex items-start justify-between gap-2">
+                  <div class="flex-1">
+                    <p class="font-semibold text-stone-800">${order.contactName || '匿名'}</p>
+                    <p class="text-sm text-stone-600">${order.address}</p>
+                    <p class="text-xs text-stone-500 mt-1">${cats} · ${order.durationLabel || order.durationId}</p>
+                  </div>
+                  <span class="text-xs px-2 py-1 rounded-full ${statusClass}">${statusText}</span>
+                </div>
+                ${order.note ? `<p class="text-xs text-stone-500 bg-pink-50 rounded-lg px-2 py-1">${order.note.slice(0, 50)}${order.note.length > 50 ? '...' : ''}</p>` : ''}
+              </div>
+            `;
+          });
+          contentEl.innerHTML = html;
+        }
+      }
+      
+      if (detailEl) {
+        detailEl.classList.remove("hidden");
+        detailEl.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }
+
+    const btnPrev = document.getElementById("cal-prev");
+    const btnNext = document.getElementById("cal-next");
+    const btnToday = document.getElementById("cal-today");
+    
+    if (btnPrev) {
+      btnPrev.addEventListener("click", () => {
+        currentCalDate = new Date(currentCalDate.getFullYear(), currentCalDate.getMonth() - 1, 1);
+        renderCalendar();
+      });
+    }
+    
+    if (btnNext) {
+      btnNext.addEventListener("click", () => {
+        currentCalDate = new Date(currentCalDate.getFullYear(), currentCalDate.getMonth() + 1, 1);
+        renderCalendar();
+      });
+    }
+    
+    if (btnToday) {
+      btnToday.addEventListener("click", () => {
+        currentCalDate = new Date();
+        renderCalendar();
+        showDayDetail(new Date().toISOString().slice(0, 10));
+      });
+    }
+
     renderStats();
     renderList();
+    renderCalendar();
   }
 
   document.addEventListener("DOMContentLoaded", () => {

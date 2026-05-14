@@ -43,7 +43,6 @@
       <section class="card-soft rounded-3xl p-5 md:p-8 space-y-6">
         <div class="flex flex-wrap items-center justify-between gap-3">
           <h2 class="text-lg font-bold text-stone-900">前台品牌与文案</h2>
-          <button type="button" id="btn-save-settings" class="btn-primary text-sm">保存全部配置</button>
         </div>
         <p class="text-sm text-stone-600">此处内容会显示在客户看到的 <code class="text-pink-700">index.html</code> 页面；价格与微信也在此维护。</p>
 
@@ -224,6 +223,11 @@
           <h3 class="font-bold text-stone-800 text-sm">工作简介图底部一行小字</h3>
           <input id="adm-poster-bottom" class="input-field max-w-2xl" type="text" />
         </div>
+
+        <div class="border-t border-pink-100 pt-6">
+          <button type="button" id="btn-save-settings" class="btn-primary w-full py-3 text-base">保存全部配置</button>
+          <p class="text-xs text-center text-stone-500 mt-2">保存后刷新前台页面即可看到更新</p>
+        </div>
       </section>
 
       <section class="card-soft rounded-3xl p-5 md:p-8 space-y-4">
@@ -259,6 +263,25 @@
             <p id="stat-revenue" class="text-2xl font-extrabold text-pink-600 mt-1">¥0</p>
             <p class="text-[10px] text-stone-400 mt-1">未取消：日价 × 预约天数</p>
           </div>
+        </div>
+      </section>
+
+      <section class="card-soft rounded-3xl p-5 md:p-8 space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <h2 class="text-lg font-bold text-stone-900">📅 日程规划</h2>
+          <div class="flex items-center gap-2">
+            <button type="button" id="cal-prev" class="btn-ghost text-sm">←</button>
+            <span id="cal-month" class="font-semibold text-stone-800"></span>
+            <button type="button" id="cal-next" class="btn-ghost text-sm">→</button>
+            <button type="button" id="cal-today" class="btn-ghost text-sm ml-2">今天</button>
+          </div>
+        </div>
+        <div class="overflow-x-auto">
+          <div id="calendar-grid" class="min-w-[600px]"></div>
+        </div>
+        <div id="cal-selected-detail" class="hidden border-t border-pink-100 pt-4 mt-2">
+          <h3 class="font-bold text-stone-800 mb-3" id="cal-detail-title"></h3>
+          <div id="cal-detail-content" class="space-y-2"></div>
         </div>
       </section>
 
@@ -303,6 +326,12 @@
           <button type="button" id="btn-poster-close-2" class="btn-ghost flex-1 justify-center min-w-[100px]">关闭</button>
         </div>
       </div>
+    </div>
+
+    <div class="fixed bottom-6 right-6 z-40">
+      <a href="index.html" class="flex items-center gap-2 rounded-full bg-emerald-500 px-4 py-2.5 text-sm font-semibold text-white shadow-lg hover:bg-emerald-600 transition-all hover:scale-105">
+        <span>🏠</span>返回前台
+      </a>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>

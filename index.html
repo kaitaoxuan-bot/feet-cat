@@ -126,7 +126,14 @@
           </label>
           <label class="block space-y-1">
             <span class="text-sm font-medium text-stone-700">猫咪数量</span>
-            <input id="f-cats" name="catCount" class="input-field" type="number" min="1" step="1" value="1" required />
+            <select id="f-cats" name="catCount" class="input-field py-2 text-sm" required>
+              <option value="1">1 只</option>
+              <option value="2">2 只</option>
+              <option value="3">3 只</option>
+              <option value="4">4 只</option>
+              <option value="5">5 只</option>
+              <option value="6">6 只及以上</option>
+            </select>
           </label>
           <label class="block space-y-1">
             <span class="text-sm font-medium text-stone-700">宠物名称 <span class="text-xs text-stone-400">(多只请用逗号分隔)</span></span>
@@ -151,10 +158,19 @@
                 <input id="f-injections" class="input-field py-2 text-sm" type="number" min="0" step="1" value="0" />
               </label>
             </div>
-            <div class="flex flex-wrap gap-x-4 gap-y-2 text-sm">
-              <label class="inline-flex items-center gap-2 cursor-pointer"><input type="checkbox" id="f-brush" class="rounded border-pink-300 text-pink-600" /><span id="lbl-brush">刷毛</span></label>
-              <label class="inline-flex items-center gap-2 cursor-pointer"><input type="checkbox" id="f-ear" class="rounded border-pink-300 text-pink-600" /><span id="lbl-ear">洗耳朵</span></label>
-              <label class="inline-flex items-center gap-2 cursor-pointer"><input type="checkbox" id="f-bath" class="rounded border-pink-300 text-pink-600" /><span id="lbl-bath">洗浴</span></label>
+            <div class="grid sm:grid-cols-3 gap-3">
+              <label class="block space-y-1">
+                <span class="text-xs text-stone-600" id="lbl-brush">刷毛（次数）</span>
+                <input id="f-brush" class="input-field py-2 text-sm" type="number" min="0" step="1" value="0" />
+              </label>
+              <label class="block space-y-1">
+                <span class="text-xs text-stone-600" id="lbl-ear">洗耳朵（次数）</span>
+                <input id="f-ear" class="input-field py-2 text-sm" type="number" min="0" step="1" value="0" />
+              </label>
+              <label class="block space-y-1">
+                <span class="text-xs text-stone-600" id="lbl-bath">洗浴（次数）</span>
+                <input id="f-bath" class="input-field py-2 text-sm" type="number" min="0" step="1" value="0" />
+              </label>
             </div>
             <label class="block space-y-1">
               <span class="text-xs text-stone-600" id="lbl-km">路程（公里，单程参考）</span>
@@ -171,10 +187,13 @@
             <div id="date-chips" class="flex flex-wrap gap-2 min-h-[36px]"></div>
             <p class="text-xs text-stone-500">可多次选择日期加入列表，提交为同一订单。</p>
           </div>
-          <div id="quote-box" class="rounded-2xl border-2 border-pink-200 bg-gradient-to-br from-pink-50 to-white p-4 space-y-2">
-            <p class="text-sm font-bold text-pink-800">预估费用合计（仅供参考）</p>
-            <ul id="quote-lines" class="text-xs text-stone-600 space-y-1 list-disc list-inside"></ul>
-            <p id="quote-total" class="text-2xl font-extrabold text-pink-600 pt-1">¥0</p>
+          <div id="quote-box" class="rounded-2xl border-2 border-pink-200 bg-gradient-to-br from-pink-50 to-white p-5 space-y-3">
+            <p class="text-base font-bold text-pink-800">💰 预估费用明细</p>
+            <ul id="quote-lines" class="text-xs text-stone-600 space-y-1.5 list-none leading-relaxed font-mono"></ul>
+            <div class="border-t-2 border-pink-200 pt-3 mt-2">
+              <p class="text-sm font-bold text-stone-700">预估合计</p>
+              <p id="quote-total" class="text-3xl font-extrabold text-pink-600">¥0</p>
+            </div>
             <p class="text-[11px] text-stone-400">实际金额以宠托师微信确认为准。</p>
           </div>
 
@@ -206,6 +225,12 @@
         </div>
       </section>
     </main>
+
+    <div class="fixed bottom-6 right-6 z-40">
+      <a href="admin.html" class="flex items-center gap-2 rounded-full bg-pink-500 px-4 py-2.5 text-sm font-semibold text-white shadow-lg hover:bg-pink-600 transition-all hover:scale-105">
+        <span>⚙️</span>管理后台
+      </a>
+    </div>
 
     <footer class="border-t border-pink-100 bg-white/80 mt-8">
       <div class="mx-auto max-w-5xl px-4 py-12 space-y-10">
