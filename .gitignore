@@ -9,3 +9,10 @@ _docx_extract/
 
 # Optional: 若不想把需求文档放进仓库，取消下一行注释
 # *.docx
+
+# wrangler files
+.wrangler
+.dev.vars*
+!.dev.vars.example
+.env*
+!.env.example
